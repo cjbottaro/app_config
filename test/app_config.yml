@@ -1,2 +1,5 @@
 size: 1
 server: google.com
+emails:
+  support: support@domain.com
+  webmaster: web@domain.com

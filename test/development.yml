@@ -3,3 +3,6 @@ computed: <%= 1 + 2 + 3 %>
 section:
   size: 3
   servers: [ {name: yahoo.com}, {name: amazon.com} ]
+emails:
+  webmaster: webmaster@domain.com
+  feedback: feedback@domain.com

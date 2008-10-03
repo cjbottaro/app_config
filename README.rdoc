@@ -24,6 +24,30 @@ Example development environment config file:
 Example production environment config file:
  RAILS_ROOT/config/environments/production.yml
 
+==== UPDATE (10/03/2008)
+The config files are recursively merged now.  Thus the following works:
+
+<tt>RAILS_ROOT/config/app_config.yml:</tt>
+  servers:
+    dev:  dev.domain.com
+    test: test.domain.com
+  
+<tt>RAILS_ROOT/config/environments/production.yml:</tt>
+  servers:
+    test: testing.domain.com
+    prod: prod.domain.com
+
+<tt>(application code):</tt>
+  AppConfig.servers.dev  # => dev.domain.com
+  AppConfig.servers.test # => testing.domain.com
+  AppConfig.servers.prod # => prod.domain.com
+
+Whereas before, the "servers" section of <tt>production.yml</tt> would completely overwrite the "servers" section of <tt>app_config.yml</tt> and you would get:
+
+  AppConfig.servers.dev  # => nil
+  AppConfig.servers.test # => testing.domain.com
+  AppConfig.servers.prod # => prod.domain.com
+
 === Embedded Ruby (ERB)
  Embedded Ruby is allowed in the configuration files.  See examples below.
 

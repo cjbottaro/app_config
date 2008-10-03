@@ -16,7 +16,7 @@ module ApplicationConfig
     conf2 = YAML.load(ERB.new(IO.read(conf_path_2)).result) if conf_path_2 and File.exists?(conf_path_2)
     conf2 = {} if !conf2 or conf2.empty?
     
-    conf = conf1.merge(conf2)
+    conf = recursive_merge(conf1, conf2)
     (!conf or conf.empty?) ? OpenStruct.new : convert(conf)
     
   end
@@ -36,6 +36,11 @@ module ApplicationConfig
       end
     end
     s
+  end
+  
+  # Recursively merges hashes.  h2 will overwrite h1.
+  def self.recursive_merge(h1, h2) #:nodoc:
+    h1.merge(h2){ |k, v1, v2| v2.kind_of?(Hash) ? recursive_merge(v1, v2) : v2 }
   end
 
 end

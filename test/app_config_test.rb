@@ -41,4 +41,11 @@ class AppConfigTest < Test::Unit::TestCase
     assert_equal 6, config.computed
   end
   
+  def test_recursive_merge
+    config = ApplicationConfig.load_files('test/app_config.yml', 'test/development.yml')
+    assert_equal 'support@domain.com', config.emails.support
+    assert_equal 'webmaster@domain.com', config.emails.webmaster
+    assert_equal 'feedback@domain.com', config.emails.feedback
+  end
+  
 end
