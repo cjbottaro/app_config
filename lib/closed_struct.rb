@@ -1,13 +1,22 @@
 require 'ostruct'
 
-class ClosedStruct < OpenStruct # :nodoc:
+# Like OpenStruct, but raises an exception if you try to access a member that wasn't specified in the initializer.
+class ClosedStruct < OpenStruct
+  
+  def self.r_new(hash)
+    closed_struct = ClosedStruct.new(hash)
+    closed_struct.send(:recursive_initialize)
+    closed_struct
+  end
   
   def initialize(*args)
-    if args.length == 1
+    if args.length == 1 and args.first.kind_of?(Hash)
       super(args.first)
+    elsif args.length > 1 and args.all?{ |arg| [Symbol, String].include?(arg.class) }
+      args = args.inject({}){ |memo, arg| memo[arg.to_sym] = nil; memo }
+      super(args)
     else
-      h = args.inject({}){ |memo, k| memo[k] = nil; memo }
-      super(h)
+      raise ArgumentError, "invalid arguments: #{args.inspect}"
     end
     @closed = true
   end
@@ -34,6 +43,18 @@ class ClosedStruct < OpenStruct # :nodoc:
   
   def to_h
     @table.dup
+  end
+  
+private
+  
+  def recursive_initialize
+    @table.each do |k, v|
+      if v.kind_of?(Hash)
+        @table[k] = ClosedStruct.r_new(v)
+      elsif v.kind_of?(Array)
+        @table[k] = v.collect{ |e| e.kind_of?(Hash) ? ClosedStruct.r_new(e) : e }
+      end
+    end
   end
   
 end

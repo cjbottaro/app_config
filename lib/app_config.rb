@@ -22,7 +22,7 @@ class ApplicationConfiguration
     conf1 = load_conf_file(@conf_path_1)
     conf2 = load_conf_file(@conf_path_2)
     conf  = recursive_merge(conf1, conf2)
-    @config = convert(conf)
+    @config = ClosedStruct.r_new(conf)
   end
   
 private
@@ -40,22 +40,6 @@ private
     File.open(conf_path, "r") do |file|
       YAML.load(ERB.new(file.read).result) || {}
     end
-  end
-  
-  # Recursively converts Hashes to ClosedStructs (including Hashes inside Arrays)
-  def convert(h) #:nodoc:
-    s = ClosedStruct.new(h.keys)
-    h.each do |k, v|
-      if v.instance_of?(Hash)
-        s.send( (k+'=').to_sym, convert(v))
-      elsif v.instance_of?(Array)
-        converted_array = v.collect { |e| e.instance_of?(Hash) ? convert(e) : e }
-        s.send( (k+'=').to_sym, converted_array)
-      else
-        s.send( (k+'=').to_sym, v)
-      end
-    end
-    s
   end
   
   # Recursively merges hashes.  h2 will overwrite h1.
