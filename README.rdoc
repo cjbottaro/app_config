@@ -55,5 +55,35 @@ You just need to create an initializer that looks something like this.
 If you installed this as a Rails plugin instead of a gem, that code is already run for you in
 the plugin's init.rb.
 
+=== Environments
+
+Alternatively to splitting out your environments into separate files, you can just have a single file which defines
+the application configuration for all environments (much like how databases.yml works).  Note if you do this, nested
+configurations will not be recursively merged.  See example below.
+
+<em>app_config.yml</em>
+  defaults: &defaults
+    one: won
+    two: too
+    nested:
+      foo: foo
+      bar: bar
+  
+  development:
+    <<: *defaults
+    two: new
+    nested:
+      foo: bar
+
+_code_
+  RAILS_ENV # => "development"
+  ::AppConfig = ApplicationConfiguration.new("app_config.yml")
+  AppConfig.use_environment!(RAILS_ENV)
+  AppConfig.one # => "won"
+  AppConfig.two # => "new"
+  AppConfig.nested.foo # => "bar"
+  AppConfig.nested.bar # raises NoMethodError because nested configurations are not recursively merged
+
+
 == Author
 Christopher J. Bottaro

@@ -6,3 +6,9 @@
 * The app config object is now an instance of ApplicationConfiguration.
 * NoMethodError raised if you try to access a config element that doesn't exist.
 * ApplicationConfiguration#reload! to reread the config files and rebuild the app config object.
+
+08/27/2009
+* Updated the ClosedStruct class.
+
+08/28/2009
+* Added support for "environments" in the YAML files.

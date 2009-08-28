@@ -1,0 +1,17 @@
+defaults: &defaults
+  size: 1
+  server: google.com
+  emails:
+    support: support@domain.com
+    webmaster: web@domain.com
+
+development:
+  <<: *defaults
+  size: 2
+  computed: <%= 1 + 2 + 3 %>
+  section:
+    size: 3
+    servers: [ {name: yahoo.com}, {name: amazon.com} ]
+  emails:
+    webmaster: webmaster@domain.com
+    feedback: feedback@domain.com

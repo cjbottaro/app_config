@@ -25,6 +25,14 @@ class ApplicationConfiguration
     @config = ClosedStruct.r_new(conf)
   end
   
+  def use_environment!(environment)
+    if @config.respond_to?(environment)
+      @config = @config.send(environment)
+    else
+      raise ArgumentError, "environment doesn't exist in app config: #{environment}"
+    end
+  end
+  
 private
   
   def method_missing(name, *args)
