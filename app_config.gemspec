@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{app_config}
-  s.version = "1.1.0"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christopher J Bottaro"]
-  s.date = %q{2009-08-28}
+  s.date = %q{2009-09-08}
   s.description = %q{Application level configuration that supports YAML config file, inheritance, ERB, and object member notation.}
   s.email = %q{cjbottaro@alumni.cs.utexas.edu}
   s.extra_rdoc_files = [
@@ -33,12 +33,14 @@ Gem::Specification.new do |s|
      "test/empty1.yml",
      "test/empty2.yml",
      "test/environments.yml",
+     "test/override_with.yml",
      "uninstall.rb"
   ]
+  s.has_rdoc = true
   s.homepage = %q{http://github.com/cjbottaro/app_config}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.3}
+  s.rubygems_version = %q{1.3.2}
   s.summary = %q{Application level configuration.}
   s.test_files = [
     "test/app_config_test.rb",
