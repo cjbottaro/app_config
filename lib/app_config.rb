@@ -21,15 +21,21 @@ class ApplicationConfiguration
   def reload!
     conf1 = load_conf_file(@conf_path_1)
     conf2 = load_conf_file(@conf_path_2)
-    conf  = recursive_merge(conf1, conf2)
-    @config = ClosedStruct.r_new(conf)
+    @config_hash  = recursive_merge(conf1, conf2)
+    @config = ClosedStruct.r_new(@config_hash)
   end
   
-  def use_environment!(environment)
-    if @config.respond_to?(environment)
-      @config = @config.send(environment)
-    else
-      raise ArgumentError, "environment doesn't exist in app config: #{environment}"
+  def use_environment!(environment, options = {})
+    raise ArgumentError, "environment doesn't exist in app config: #{environment}" \
+      unless @config_hash.has_key?(environment.to_s)
+    
+    @config_hash = @config_hash[environment.to_s]
+    @config = @config.send(environment)
+    
+    if options[:override_with] and File.exist?(options[:override_with])
+      overriding_config = load_conf_file(options[:override_with])
+      @config_hash = recursive_merge(@config_hash, overriding_config)
+      @config = ClosedStruct.r_new(@config_hash)
     end
   end
   

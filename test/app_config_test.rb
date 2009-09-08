@@ -75,4 +75,31 @@ class AppConfigTest < Test::Unit::TestCase
     assert_raise(NoMethodError){ config.emails.support }
   end
   
+  def test_use_environment_override_with
+    config = ApplicationConfiguration.new('test/environments.yml')
+    config.use_environment!("development", :override_with => "test/override_with.yml")
+    assert_equal 10, config.size
+    assert_equal "over.com", config.section.servers[0].name
+    assert_equal "ride.com", config.section.servers[1].name
+    assert_equal "google.com", config.server
+    assert_equal 6, config.computed
+    assert_equal "webmaster@domain.com", config.emails.webmaster
+    assert_equal "feedback@domain.com", config.emails.feedback
+    assert_raise(NoMethodError){ config.emails.support }
+  end
+  
+  def test_use_environment_override_with_no_file
+    config = ApplicationConfiguration.new('test/environments.yml')
+    config.use_environment!("development", :override_with => "test/non_existant.yml")
+    assert_equal 2, config.size
+    assert_equal "google.com", config.server
+    assert_equal 6, config.computed
+    assert_equal 3, config.section.size
+    assert_equal "yahoo.com", config.section.servers[0].name
+    assert_equal "amazon.com", config.section.servers[1].name
+    assert_equal "webmaster@domain.com", config.emails.webmaster
+    assert_equal "feedback@domain.com", config.emails.feedback
+    assert_raise(NoMethodError){ config.emails.support }
+  end
+  
 end
