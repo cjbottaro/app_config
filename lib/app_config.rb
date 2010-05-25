@@ -50,7 +50,7 @@ private
   end
   
   def load_conf_file(conf_path)
-    return {} if !conf_path or conf_path.empty?
+    return {} if !conf_path or conf_path.empty? or !File.exist?(conf_path)
     File.open(conf_path, "r") do |file|
       YAML.load(ERB.new(file.read).result) || {}
     end
