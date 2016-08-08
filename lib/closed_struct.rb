@@ -18,7 +18,6 @@ class ClosedStruct < OpenStruct
     else
       raise ArgumentError, "invalid arguments: #{args.inspect}"
     end
-    @closed = true
   end
 
   def new_ostruct_member(name)
