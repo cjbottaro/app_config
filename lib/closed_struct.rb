@@ -20,14 +20,6 @@ class ClosedStruct < OpenStruct
     end
   end
 
-  def new_ostruct_member(name)
-    if @closed
-      raise RuntimeError, "cannot add members to closed struct"
-    else
-      super
-    end
-  end
-
   def id
     if @table.has_key?(:id)
       @table[:id]
